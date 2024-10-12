@@ -27,7 +27,7 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<String> signup (@RequestBody SignupRequestDto signupRequestDto){
         memberService.signup(signupRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("회원가입에 성공하였습니다.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 
     @PostMapping("/login")
@@ -40,7 +40,7 @@ public class MemberController {
         responseBody.put("member", memberResponseDto);
         responseBody.put("accessToken", accessToken);
         responseBody.put("refreshToken", refreshToken);
-        responseBody.put("message", "로그인에 성공하였습니다.");
+        responseBody.put("message", "Success");
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
