@@ -26,15 +26,17 @@ public class Member {
 
     private String profileImage;
 
+    private Gender gender;
+
     private String studentNumber;
 
     private String major;
+
+    private Boolean isDeleted = false;
 
     public Member(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
     }
-
-
 }
