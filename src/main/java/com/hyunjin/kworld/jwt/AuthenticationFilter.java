@@ -3,6 +3,7 @@ package com.hyunjin.kworld.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyunjin.kworld.global.MemberDetailsImpl;
 import com.hyunjin.kworld.member.dto.LoginRequestDto;
+import com.hyunjin.kworld.member.dto.MemberResponseDto;
 import com.hyunjin.kworld.member.entity.Member;
 import com.hyunjin.kworld.member.entity.RefreshToken;
 import com.hyunjin.kworld.member.repository.MemberRepository;
@@ -65,7 +66,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String token = tokenProvider.createToken(email);
         String refresh = tokenProvider.createRefreshToken(email);
 
-
         RefreshToken refreshToken = refreshTokenRepository.findByEmail(email).orElse(null);
         if (refreshToken == null) {
             refreshToken = new RefreshToken(refresh, email);
@@ -75,11 +75,25 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         refreshTokenRepository.save(refreshToken);
         httpServletResponse.addHeader(TokenProvider.AUTHORIZATION_HEADER, token);
         httpServletResponse.addHeader(TokenProvider.REFRESH_HEADER, refreshToken.getToken());
-        httpServletResponse.setContentType("application/json; charset=UTF-8");
 
-        Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("token", token);
+        httpServletResponse.setContentType("application/json");
+        httpServletResponse.setCharacterEncoding("UTF-8");
+
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+        MemberResponseDto memberResponseDto = new MemberResponseDto(
+                member.getEmail(),
+                member.getName(),
+                member.getProfileImage(),
+                member.getGender(),
+                member.getStudentNumber(),
+                member.getMajor()
+        );
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("member", memberResponseDto);
+        responseBody.put("accessToken", token);
         responseBody.put("refreshToken", refreshToken.getToken());
+        responseBody.put("message", "로그인에 성공하였습니다.");
 
         try (PrintWriter writer = httpServletResponse.getWriter()) {
             writer.write(new ObjectMapper().writeValueAsString(responseBody));

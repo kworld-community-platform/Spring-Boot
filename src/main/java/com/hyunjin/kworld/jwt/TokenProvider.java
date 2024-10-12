@@ -51,10 +51,10 @@ public class TokenProvider {
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(email) // 사용자 식별자값(ID)
-                        .setExpiration(new Date(date.getTime() + RefreshTOKEN_TIME)) // 만료 시간
-                        .setIssuedAt(date) // 발급일
-                        .signWith(key, signatureAlgorithm) // 암호화 알고리즘
+                        .setSubject(email)
+                        .setExpiration(new Date(date.getTime() + RefreshTOKEN_TIME))
+                        .setIssuedAt(date)
+                        .signWith(key, signatureAlgorithm)
                         .compact();
     }
 

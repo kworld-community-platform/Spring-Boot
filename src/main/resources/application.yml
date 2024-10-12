@@ -7,20 +7,9 @@ spring:
 
   datasource:
     driver-class-name: ${DB_DRIVER_CLASS}
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-
-    hikari:
-      maximum-pool-size: 1
-      minimum-idle: 1
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      connection-timeout: 30000
-
-jwt:
-  secret:
-    key: asjdklasjdklasdjaksldjaskldjaskldqmklwmklnczxkcnpqosenpoeno
 
   jpa:
     hibernate:
@@ -30,3 +19,6 @@ jwt:
         format_sql: true
     show-sql: true
 
+jwt:
+  secret:
+    key: asjdklasjdklasdjaksldjaskldjaskldqmklwmklnczxkcnpqosenpoeno

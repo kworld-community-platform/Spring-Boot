@@ -1,10 +1,15 @@
 package com.hyunjin.kworld.member.service;
 
+import com.hyunjin.kworld.jwt.TokenProvider;
+import com.hyunjin.kworld.member.dto.LoginRequestDto;
+import com.hyunjin.kworld.member.dto.MemberResponseDto;
 import com.hyunjin.kworld.member.dto.SignupRequestDto;
 import com.hyunjin.kworld.member.entity.Member;
 import com.hyunjin.kworld.member.repository.MemberRepository;
+import com.hyunjin.kworld.member.repository.RefreshTokenRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,6 +17,9 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final TokenProvider tokenProvider;
 
     @Transactional
     public void signup (SignupRequestDto signupRequestDto){
@@ -28,8 +36,27 @@ public class MemberService {
             throw new IllegalArgumentException("이미 가입한 계정입니다.");
         }
 
-        Member member = new Member(email, password, name);
+        Member member = new Member(email, passwordEncoder.encode(password), name);
 
         memberRepository.save(member);
+    }
+
+    @Transactional
+    public MemberResponseDto login (LoginRequestDto loginrequestDto){
+        Member member = memberRepository.findByEmail(loginrequestDto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("로그인 정보를 확인해주세요"));
+
+        if (!passwordEncoder.matches(loginrequestDto.getPassword(), member.getPassword())) {
+            throw new IllegalArgumentException("로그인 정보를 확인해주세요");
+        }
+
+        return new MemberResponseDto(
+                member.getEmail(),
+                member.getName(),
+                member.getProfileImage(),
+                member.getGender(),
+                member.getStudentNumber(),
+                member.getMajor()
+        );
     }
 }
