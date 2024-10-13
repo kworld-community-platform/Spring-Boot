@@ -27,4 +27,10 @@ public class IlchonRequest {
 
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
+
+    public IlchonRequest(Member requester, Member receiver, RequestStatus status) {
+        this.requester = requester;
+        this.receiver = receiver;
+        this.status = status;
+    }
 }
