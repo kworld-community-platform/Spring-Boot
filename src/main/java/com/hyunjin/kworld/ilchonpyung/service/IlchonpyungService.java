@@ -1,5 +1,6 @@
 package com.hyunjin.kworld.ilchonpyung.service;
 
+import com.hyunjin.kworld.ilchon.entity.Ilchon;
 import com.hyunjin.kworld.ilchon.repository.IlchonRepository;
 import com.hyunjin.kworld.ilchonpyung.dto.IlchonpyungRequestDto;
 import com.hyunjin.kworld.ilchonpyung.dto.IlchonpyungResponseDto;
@@ -19,7 +20,7 @@ public class IlchonpyungService {
     private final IlchonRepository ilchonRepository;
 
     @Transactional
-    public IlchonpyungResponseDto write(Long ownerId, Member writer, IlchonpyungRequestDto ilchonpyungRequestDto){
+    public IlchonpyungResponseDto writeIlchonpyung(Long ownerId, Member writer, IlchonpyungRequestDto ilchonpyungRequestDto){
         Member owner = memberRepository.findById(ownerId)
                 .orElseThrow(()-> new IllegalArgumentException("해당 사용자의 미니홈피가 존재하지 않습니다."));
 
@@ -31,5 +32,22 @@ public class IlchonpyungService {
         ilchonpyungRepository.save(ilchonpyung);
 
         return new IlchonpyungResponseDto(ilchonpyung.getId(), ilchonpyungRequestDto.getNickname(), ilchonpyungRequestDto.getIlchonpyung());
+    }
+
+    @Transactional
+    public void deleteIlchonpyung(Long ownerId, Long ilchonpyungId, Member currentMember){
+        Member owner = memberRepository.findById(ownerId)
+                .orElseThrow(()-> new IllegalArgumentException("해당 사용자의 미니홈피가 존재하지 않습니다."));
+
+        Ilchonpyung ilchonpyung = ilchonpyungRepository.findById(ilchonpyungId)
+                .orElseThrow(() -> new IllegalArgumentException("일촌평이 존재하지 않습니다."));
+
+        Member writer = ilchonpyung.getWriter();
+
+        if (currentMember.getId().equals(writer.getId()) || currentMember.getId().equals(owner.getId())) {
+            ilchonpyungRepository.delete(ilchonpyung);
+        } else {
+            throw new IllegalArgumentException("삭제할 권한이 없습니다.");
+        }
     }
 }

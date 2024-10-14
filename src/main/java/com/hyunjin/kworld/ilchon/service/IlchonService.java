@@ -4,12 +4,14 @@ import com.hyunjin.kworld.ilchon.entity.Ilchon;
 import com.hyunjin.kworld.ilchon.repository.IlchonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class IlchonService {
     private final IlchonRepository ilchonRepository;
 
+    @Transactional
     public void deleteIlchon(Long currentMemberId, Long otherMemberId) {
         Ilchon ilchon = ilchonRepository.findByMemberIds(currentMemberId, otherMemberId)
                 .orElseThrow(() -> new IllegalArgumentException("일촌이 아닙니다."));

@@ -18,9 +18,18 @@ public class IlchonpyungController {
     private final IlchonpyungService ilchonpyungService;
 
     @PostMapping("/{ownerId}")
-    public ResponseEntity<IlchonpyungResponseDto> write (@PathVariable Long ownerId, @RequestBody IlchonpyungRequestDto ilchonpyungRequestDto, @AuthenticationPrincipal MemberDetailsImpl MemberDetails) {
+    public ResponseEntity<IlchonpyungResponseDto> writeIlchonpyung (@PathVariable Long ownerId, @RequestBody IlchonpyungRequestDto ilchonpyungRequestDto, @AuthenticationPrincipal MemberDetailsImpl MemberDetails) {
         Member writerId = MemberDetails.getMember();
-        IlchonpyungResponseDto ilchonpyungResponseDto = ilchonpyungService.write(ownerId, writerId, ilchonpyungRequestDto);
+        IlchonpyungResponseDto ilchonpyungResponseDto = ilchonpyungService.writeIlchonpyung(ownerId, writerId, ilchonpyungRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(ilchonpyungResponseDto);
+    }
+
+    @DeleteMapping("/{ownerId}/{ilchonpyungId}")
+    public ResponseEntity<String> deleteIlchonpyung (@PathVariable Long ownerId,
+                                                     @PathVariable Long ilchonpyungId,
+                                                     @AuthenticationPrincipal MemberDetailsImpl MemberDetails) {
+        Member currentMember = MemberDetails.getMember();
+        ilchonpyungService.deleteIlchonpyung(ownerId, ilchonpyungId, currentMember);
+        return ResponseEntity.ok("일촌평을 삭제하였습니다.");
     }
 }
