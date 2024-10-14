@@ -13,11 +13,11 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ilchon")
+@RequestMapping("/ilchonRequest")
 public class IlchonRequestController {
     private final IlchonRequestService ilchonRequestService;
 
-    @PostMapping("/request/{receiverId}")
+    @PostMapping("/{receiverId}")
     public ResponseEntity<IlchonResponseDto> request (@PathVariable Long receiverId, @AuthenticationPrincipal MemberDetailsImpl MemberDetails) {
         IlchonRequest ilchonRequest = ilchonRequestService.request(receiverId,MemberDetails.getMember());
         IlchonResponseDto ilchonResponseDto = new IlchonResponseDto(ilchonRequest.getId(),ilchonRequest.getRequester().getName(),ilchonRequest.getRequester().getGender().toString(),ilchonRequest.getRequester().getStudentNumber(),ilchonRequest.getRequester().getMajor(),ilchonRequest.getStatus());
