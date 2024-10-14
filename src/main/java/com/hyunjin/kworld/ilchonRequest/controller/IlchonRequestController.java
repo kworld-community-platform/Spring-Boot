@@ -35,4 +35,10 @@ public class IlchonRequestController {
         ilchonRequestService.acceptRequest(requestId,MemberDetails.getMember());
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/reject/{requestId}")
+    public ResponseEntity<Void> rejectRequest (@PathVariable Long requestId, @AuthenticationPrincipal MemberDetailsImpl MemberDetails){
+        ilchonRequestService.rejectRequest(requestId, MemberDetails.getMember());
+        return ResponseEntity.ok().build();
+    }
 }

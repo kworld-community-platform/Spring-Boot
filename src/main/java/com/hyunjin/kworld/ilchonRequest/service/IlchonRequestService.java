@@ -32,9 +32,14 @@ public class IlchonRequestService {
             throw new IllegalArgumentException("본인에겐 일촌 요청을 보낼 수 없습니다.");
         }
 
-        boolean existingRequest = ilchonRequestRepository.existsByRequesterAndReceiver(requester, receiver);
+        boolean existingRequest = ilchonRequestRepository.existsByRequesterAndReceiver(requester, receiver) || ilchonRequestRepository.existsByRequesterAndReceiver(receiver, requester);
         if(existingRequest) {
-            throw new IllegalArgumentException("이미 일촌 요청을 보냈습니다.");
+            throw new IllegalArgumentException("일촌 요청 상태를 확인해보세요.");
+        }
+
+        boolean existingIlchon = ilchonRepository.existsByMember1AndMember2(requester, receiver) || ilchonRepository.existsByMember1AndMember2(receiver, requester);
+        if(existingIlchon){
+            throw new IllegalArgumentException("이미 일촌입니다.");
         }
 
         IlchonRequest ilchonRequest = new IlchonRequest(requester,receiver,RequestStatus.PENDING);
@@ -71,4 +76,18 @@ public class IlchonRequestService {
 
         ilchonRequestRepository.delete(ilchonRequest);
     }
+
+    @Transactional
+    public void rejectRequest(Long requestId, Member receiver){
+        IlchonRequest ilchonRequest = ilchonRequestRepository.findById(requestId)
+                .orElseThrow(()->new IllegalArgumentException("요청을 찾을 수 없습니다."));
+
+        if(!ilchonRequest.getReceiver().getId().equals(receiver.getId())){
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
+        Ilchon ilchon = new Ilchon(ilchonRequest.getRequester(), ilchonRequest.getReceiver());
+        ilchonRequestRepository.delete(ilchonRequest);
+    }
+
 }
