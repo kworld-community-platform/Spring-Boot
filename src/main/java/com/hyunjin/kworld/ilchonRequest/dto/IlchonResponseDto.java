@@ -8,5 +8,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class IlchonResponseDto {
     private Long requestId;
+    private String requesterName;
+    private String requestGender;
+    private String requestStudentNumber;
+    private String requestMajor;
     private RequestStatus status;
 }

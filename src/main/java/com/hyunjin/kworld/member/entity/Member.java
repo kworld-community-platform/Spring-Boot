@@ -26,17 +26,24 @@ public class Member {
 
     private String profileImage;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column(nullable = false)
     private String studentNumber;
 
+    @Column(nullable = false)
     private String major;
 
     private Boolean isDeleted = false;
 
-    public Member(String email, String password, String name) {
+    public Member(String email, String password, String name, Gender gender, String studentNumber, String major) {
         this.email = email;
         this.password = password;
         this.name = name;
+        this.gender = gender;
+        this.studentNumber = studentNumber;
+        this.major = major;
     }
 }

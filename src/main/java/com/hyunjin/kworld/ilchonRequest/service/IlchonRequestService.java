@@ -1,19 +1,25 @@
 package com.hyunjin.kworld.ilchonRequest.service;
 
+import com.hyunjin.kworld.ilchonRequest.dto.IlchonResponseDto;
 import com.hyunjin.kworld.ilchonRequest.entity.IlchonRequest;
 import com.hyunjin.kworld.ilchonRequest.entity.RequestStatus;
 import com.hyunjin.kworld.ilchonRequest.repository.IlchonRequestRepository;
 import com.hyunjin.kworld.member.entity.Member;
 import com.hyunjin.kworld.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.webmvc.core.service.RequestService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class IlchonRequestService {
     private final IlchonRequestRepository ilchonRequestRepository;
     private final MemberRepository memberRepository;
+    private final RequestService requestBuilder;
 
     @Transactional
     public IlchonRequest request(Long receiverId, Member requester) {
@@ -31,5 +37,21 @@ public class IlchonRequestService {
 
         IlchonRequest ilchonRequest = new IlchonRequest(requester,receiver,RequestStatus.PENDING);
         return ilchonRequestRepository.save(ilchonRequest);
+    }
+
+    @Transactional
+    public List<IlchonResponseDto> getRequests (Member receiver) {
+        List<IlchonRequest> pendingRequests = ilchonRequestRepository.findByReceiverAndStatus(receiver, RequestStatus.PENDING);
+
+        return pendingRequests.stream()
+                .map(request -> new IlchonResponseDto(
+                        request.getId(),
+                        request.getRequester().getName(),
+                        request.getRequester().getGender().toString(),
+                        request.getReceiver().getStudentNumber(),
+                        request.getReceiver().getMajor(),
+                        request.getStatus()
+                ))
+                .collect(Collectors.toList());
     }
 }
