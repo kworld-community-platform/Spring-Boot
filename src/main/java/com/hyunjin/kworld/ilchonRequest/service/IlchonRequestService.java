@@ -1,5 +1,6 @@
 package com.hyunjin.kworld.ilchonRequest.service;
 
+import com.hyunjin.kworld.ilchon.entity.Ilchon;
 import com.hyunjin.kworld.ilchonRequest.dto.IlchonResponseDto;
 import com.hyunjin.kworld.ilchonRequest.entity.IlchonRequest;
 import com.hyunjin.kworld.ilchonRequest.entity.RequestStatus;
@@ -20,6 +21,7 @@ public class IlchonRequestService {
     private final IlchonRequestRepository ilchonRequestRepository;
     private final MemberRepository memberRepository;
     private final RequestService requestBuilder;
+    private final com.hyunjin.kworld.ilchon.repository.ilchonRepository ilchonRepository;
 
     @Transactional
     public IlchonRequest request(Long receiverId, Member requester) {
@@ -48,10 +50,25 @@ public class IlchonRequestService {
                         request.getId(),
                         request.getRequester().getName(),
                         request.getRequester().getGender().toString(),
-                        request.getReceiver().getStudentNumber(),
-                        request.getReceiver().getMajor(),
+                        request.getRequester().getStudentNumber(),
+                        request.getRequester().getMajor(),
                         request.getStatus()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void acceptRequest(Long requestId, Member receiver){
+        IlchonRequest ilchonRequest = ilchonRequestRepository.findById(requestId)
+                .orElseThrow(()->new IllegalArgumentException("요청을 찾을 수 없습니다."));
+
+        if(!ilchonRequest.getReceiver().getId().equals(receiver.getId())){
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
+        Ilchon ilchon = new Ilchon(ilchonRequest.getRequester(), ilchonRequest.getReceiver());
+        ilchonRepository.save(ilchon);
+
+        ilchonRequestRepository.delete(ilchonRequest);
     }
 }

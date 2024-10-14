@@ -29,4 +29,10 @@ public class IlchonRequestController {
         List<IlchonResponseDto> ilchonRequestList = ilchonRequestService.getRequests(MemberDetails.getMember());
         return ResponseEntity.ok(ilchonRequestList);
     }
+
+    @PostMapping("/accept/{requestId}")
+    public ResponseEntity<Void> acceptRequest (@PathVariable Long requestId, @AuthenticationPrincipal MemberDetailsImpl MemberDetails){
+        ilchonRequestService.acceptRequest(requestId,MemberDetails.getMember());
+        return ResponseEntity.ok().build();
+    }
 }
