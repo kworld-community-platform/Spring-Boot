@@ -26,6 +26,15 @@ public class Ilchonpyung extends BaseEntity {
     private Member writer;
 
     @Column(nullable = false)
+    private String nickname;
+
+    @Column(nullable = false)
     private String ilchonpyung;
 
+    public Ilchonpyung(Member owner, Member writer, String nickname, String ilchonpyung) {
+        this.owner = owner;
+        this.writer = writer;
+        this.nickname = nickname;
+        this.ilchonpyung = ilchonpyung;
+    }
 }

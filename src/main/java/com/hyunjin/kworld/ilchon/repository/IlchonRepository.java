@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ilchonRepository extends JpaRepository<Ilchon,Long> {
+public interface IlchonRepository extends JpaRepository<Ilchon,Long> {
     boolean existsByMember1AndMember2(Member member1, Member member2);
 }

@@ -1,6 +1,7 @@
 package com.hyunjin.kworld.ilchonRequest.service;
 
 import com.hyunjin.kworld.ilchon.entity.Ilchon;
+import com.hyunjin.kworld.ilchon.repository.IlchonRepository;
 import com.hyunjin.kworld.ilchonRequest.dto.IlchonResponseDto;
 import com.hyunjin.kworld.ilchonRequest.entity.IlchonRequest;
 import com.hyunjin.kworld.ilchonRequest.entity.RequestStatus;
@@ -21,7 +22,7 @@ public class IlchonRequestService {
     private final IlchonRequestRepository ilchonRequestRepository;
     private final MemberRepository memberRepository;
     private final RequestService requestBuilder;
-    private final com.hyunjin.kworld.ilchon.repository.ilchonRepository ilchonRepository;
+    private final IlchonRepository ilchonRepository;
 
     @Transactional
     public IlchonRequest request(Long receiverId, Member requester) {
