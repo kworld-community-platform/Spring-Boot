@@ -1,5 +1,6 @@
 package com.hyunjin.kworld.ilchon.entity;
 
+import com.hyunjin.kworld.global.BaseEntity;
 import com.hyunjin.kworld.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ilchon {
+public class Ilchon extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="ilchon_id")

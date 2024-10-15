@@ -1,6 +1,5 @@
 package com.hyunjin.kworld.ilchonpyung.service;
 
-import com.hyunjin.kworld.ilchon.entity.Ilchon;
 import com.hyunjin.kworld.ilchon.repository.IlchonRepository;
 import com.hyunjin.kworld.ilchonpyung.dto.IlchonpyungRequestDto;
 import com.hyunjin.kworld.ilchonpyung.dto.IlchonpyungResponseDto;
