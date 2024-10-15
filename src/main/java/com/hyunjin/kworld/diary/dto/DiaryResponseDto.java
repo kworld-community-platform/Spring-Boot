@@ -1,14 +1,16 @@
 package com.hyunjin.kworld.diary.dto;
 
+import com.hyunjin.kworld.diary.entity.DiaryImage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
 @Getter
 @AllArgsConstructor
-public class DiaryRequestDto {
+public class DiaryResponseDto {
+    private Long diaryId;
     private String title;
     private String content;
-    private List<MultipartFile> images;
+    private List<String> images;
 }

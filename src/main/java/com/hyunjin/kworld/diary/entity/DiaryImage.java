@@ -1,6 +1,10 @@
 package com.hyunjin.kworld.diary.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+
+@Entity
+@Getter
 
 public class DiaryImage {
     @Id

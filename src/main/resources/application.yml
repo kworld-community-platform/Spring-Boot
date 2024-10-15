@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8090
 
 spring:
   config:
@@ -19,6 +19,16 @@ spring:
         format_sql: true
     show-sql: true
 
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+      s3:
+        bucket: kworld
+        bucket-url: ${AWS_S3_BUCKET_URL}
+      region:
+        static: ${AWS_REGION}
 jwt:
   secret:
     key: asjdklasjdklasdjaksldjaskldjaskldqmklwmklnczxkcnpqosenpoeno
