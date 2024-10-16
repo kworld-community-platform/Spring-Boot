@@ -15,11 +15,11 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/diaries")
+@RequestMapping
 public class DiaryController {
     private final DiaryService diaryService;
 
-    @PostMapping
+    @PostMapping("/diaries")
     public ResponseEntity<DiaryResponseDto> createDiary (@RequestPart(value = "images", required = false) List<MultipartFile> images,
                                                          @RequestParam("title") String title,
                                                          @RequestParam("content") String content,
@@ -30,9 +30,17 @@ public class DiaryController {
         return ResponseEntity.ok(diaryResponseDto);
     }
 
-    @GetMapping("/{memberId}")
+    @GetMapping("/members/diaries/{memberId}")
     public ResponseEntity<List<DiaryResponseDto>> getAllDiary (@PathVariable Long memberId){
         List<DiaryResponseDto> diaryResponseDtos = diaryService.getAllDiary(memberId);
         return ResponseEntity.ok(diaryResponseDtos);
     }
+
+    @GetMapping("/diaries/{diaryId}")
+    public ResponseEntity<DiaryResponseDto> getOneDiary (@PathVariable Long diaryId, @AuthenticationPrincipal MemberDetailsImpl MemberDetails){
+        Member member = MemberDetails.getMember();
+        DiaryResponseDto diaryResponseDto = diaryService.getOneDiary(diaryId, member);
+        return ResponseEntity.ok(diaryResponseDto);
+    }
+
 }

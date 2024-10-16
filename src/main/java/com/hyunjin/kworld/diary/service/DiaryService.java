@@ -52,4 +52,14 @@ public class DiaryService {
                 .map(DiaryResponseDto::new)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public DiaryResponseDto getOneDiary (Long diaryId, Member member){
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(()->new IllegalArgumentException("다이어리가 존재하지 않습니다."));
+        if(!diary.getMember().getId().equals(member.getId())){
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+        return new DiaryResponseDto(diary);
+    }
 }
