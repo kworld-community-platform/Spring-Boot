@@ -29,6 +29,12 @@ spring:
         bucket-url: ${AWS_S3_BUCKET_URL}
       region:
         static: ${AWS_REGION}
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 30MB
+      max-request-size: 30MB
 jwt:
   secret:
     key: asjdklasjdklasdjaksldjaskldjaskldqmklwmklnczxkcnpqosenpoeno

@@ -19,12 +19,14 @@ import java.util.List;
 public class DiaryController {
     private final DiaryService diaryService;
 
-//    @PostMapping
-//    public ResponseEntity<DiaryResponseDto> createDiary (@RequestPart(value = "images", required = false) List<MultipartFile> images,
-//                                                         @RequestPart("diary") DiaryRequestDto diaryRequestDto,
-//                                                         @AuthenticationPrincipal MemberDetailsImpl MemberDetails) {
-//        Member member = MemberDetails.getMember();
-//        DiaryResponseDto diaryResponseDto = diaryService.createDiary(images,diaryRequestDto,member);
-//        return ResponseEntity.ok(diaryResponseDto);
-//    }
+    @PostMapping
+    public ResponseEntity<DiaryResponseDto> createDiary (@RequestPart(value = "images", required = false) List<MultipartFile> images,
+                                                         @RequestParam("title") String title,
+                                                         @RequestParam("content") String content,
+                                                         @AuthenticationPrincipal MemberDetailsImpl MemberDetails) {
+        Member member = MemberDetails.getMember();
+        DiaryRequestDto diaryRequestDto = new DiaryRequestDto(title, content,images);
+        DiaryResponseDto diaryResponseDto = diaryService.createDiary(images, diaryRequestDto, member);
+        return ResponseEntity.ok(diaryResponseDto);
+    }
 }
