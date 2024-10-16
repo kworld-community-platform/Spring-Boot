@@ -152,4 +152,27 @@ public class DiaryService {
         return new DiaryResponseDto(diary.getId(), diary.getTitle(), diary.getContent(), updatedImageDtos);
     }
 
+    @Transactional
+    public void deleteDiary(Long diaryId, Member member) {
+        Diary diary = diaryRepository.findByIdWithImagesOrdered(diaryId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 다이어리입니다."));
+
+        if (!diary.getMember().getId().equals(member.getId())) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+        deleteAllImagesFromS3(diary);
+        diaryRepository.delete(diary);
+    }
+
+    private void deleteAllImagesFromS3(Diary diary) {
+        for (DiaryImage image : diary.getImages()) {
+            System.out.println("Deleting file from S3: " + image.getImageUrl());
+            try {
+                boolean isDeleted = s3Uploader.deleteFile(image.getImageUrl());
+                System.out.println("S3 삭제 결과: " + isDeleted + " / URL: " + image.getImageUrl());
+            } catch (IOException e) {
+                System.err.println("이미지 삭제 중 오류: " + e.getMessage());
+            }
+        }
+    }
 }

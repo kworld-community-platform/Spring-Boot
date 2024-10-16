@@ -5,6 +5,7 @@ import com.hyunjin.kworld.diary.dto.DiaryResponseDto;
 import com.hyunjin.kworld.diary.dto.DiaryUpdateRequestDto;
 import com.hyunjin.kworld.diary.service.DiaryService;
 import com.hyunjin.kworld.global.MemberDetailsImpl;
+import com.hyunjin.kworld.global.MemberDetailsServiceImpl;
 import com.hyunjin.kworld.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping
 public class DiaryController {
     private final DiaryService diaryService;
+    private final MemberDetailsServiceImpl memberDetailsServiceImpl;
 
     @PostMapping("/diaries")
     public ResponseEntity<DiaryResponseDto> createDiary (@RequestPart(value = "images", required = false) List<MultipartFile> images,
@@ -58,5 +60,12 @@ public class DiaryController {
         DiaryUpdateRequestDto diaryUpdateRequestDto = new DiaryUpdateRequestDto(title, content, newImages, deleteImgIds, replaceImgIds, replaceImages);
         DiaryResponseDto diaryResponseDto = diaryService.updateDiary(diaryId, diaryUpdateRequestDto, member);
         return ResponseEntity.ok().body(diaryResponseDto);
+    }
+
+    @DeleteMapping("/diaries/{diaryId}")
+    public ResponseEntity<String> deleteDiary(@PathVariable Long diaryId, @AuthenticationPrincipal MemberDetailsImpl MemberDetails){
+        Member member = MemberDetails.getMember();
+        diaryService.deleteDiary(diaryId, member);
+        return ResponseEntity.ok("다이어리를 삭제하셨습니다.");
     }
 }
