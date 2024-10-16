@@ -29,4 +29,10 @@ public class DiaryController {
         DiaryResponseDto diaryResponseDto = diaryService.createDiary(images, diaryRequestDto, member);
         return ResponseEntity.ok(diaryResponseDto);
     }
+
+    @GetMapping("/{memberId}")
+    public ResponseEntity<List<DiaryResponseDto>> getAllDiary (@PathVariable Long memberId){
+        List<DiaryResponseDto> diaryResponseDtos = diaryService.getAllDiary(memberId);
+        return ResponseEntity.ok(diaryResponseDtos);
+    }
 }

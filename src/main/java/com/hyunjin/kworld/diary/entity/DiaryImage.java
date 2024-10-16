@@ -1,11 +1,14 @@
 package com.hyunjin.kworld.diary.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class DiaryImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
