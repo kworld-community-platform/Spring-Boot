@@ -2,6 +2,7 @@ package com.hyunjin.kworld.diary.controller;
 
 import com.hyunjin.kworld.diary.dto.DiaryRequestDto;
 import com.hyunjin.kworld.diary.dto.DiaryResponseDto;
+import com.hyunjin.kworld.diary.dto.DiaryUpdateRequestDto;
 import com.hyunjin.kworld.diary.service.DiaryService;
 import com.hyunjin.kworld.global.MemberDetailsImpl;
 import com.hyunjin.kworld.member.entity.Member;
@@ -11,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -43,4 +45,18 @@ public class DiaryController {
         return ResponseEntity.ok(diaryResponseDto);
     }
 
+    @PutMapping("/diaries/{diaryId}")
+    public ResponseEntity<DiaryResponseDto> updateDiary(@PathVariable Long diaryId,
+                                                        @RequestPart(value = "newImages", required = false) List<MultipartFile> newImages,
+                                                        @RequestParam(value = "deleteIds", required = false) List<Long> deleteImgIds,
+                                                        @RequestParam(value = "replaceIds", required = false) List<Long> replaceImgIds,
+                                                        @RequestPart(value = "replaceImages", required = false) List<MultipartFile> replaceImages,
+                                                        @RequestParam(required = false) String title,
+                                                        @RequestParam(required = false) String content,
+                                                        @AuthenticationPrincipal MemberDetailsImpl memberDetails) throws IOException {
+        Member member = memberDetails.getMember();
+        DiaryUpdateRequestDto diaryUpdateRequestDto = new DiaryUpdateRequestDto(title, content, newImages, deleteImgIds, replaceImgIds, replaceImages);
+        DiaryResponseDto diaryResponseDto = diaryService.updateDiary(diaryId, diaryUpdateRequestDto, member);
+        return ResponseEntity.ok().body(diaryResponseDto);
+    }
 }
