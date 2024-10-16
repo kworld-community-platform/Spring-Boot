@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class IlchonpyungService {
@@ -27,11 +30,25 @@ public class IlchonpyungService {
             throw new IllegalArgumentException("일촌이 아닙니다");
         }
 
+        boolean alreadyWritten = ilchonpyungRepository.existsByOwnerIdAndWriterId(ownerId, writer.getId());
+        if (alreadyWritten) {
+            throw new IllegalArgumentException("이미 작성한 일촌평이 있습니다.");
+        }
+
         Ilchonpyung ilchonpyung = new Ilchonpyung(owner, writer, ilchonpyungRequestDto.getNickname(), ilchonpyungRequestDto.getIlchonpyung());
         ilchonpyungRepository.save(ilchonpyung);
 
         return new IlchonpyungResponseDto(ilchonpyung.getId(), ilchonpyungRequestDto.getNickname(), ilchonpyungRequestDto.getIlchonpyung());
     }
+
+    @Transactional
+    public List<IlchonpyungResponseDto> getAllIlchonpyung(Long ownerId){
+        List<Ilchonpyung> ilchonpyungs = ilchonpyungRepository.findAllByOwnerId(ownerId);
+        return ilchonpyungs.stream()
+                .map(IlchonpyungResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public void deleteIlchonpyung(Long ownerId, Long ilchonpyungId, Member currentMember){

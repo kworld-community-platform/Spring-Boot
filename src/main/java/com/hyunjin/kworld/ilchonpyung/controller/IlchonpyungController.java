@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("ilchonpyung")
@@ -22,6 +24,12 @@ public class IlchonpyungController {
         Member writerId = MemberDetails.getMember();
         IlchonpyungResponseDto ilchonpyungResponseDto = ilchonpyungService.writeIlchonpyung(ownerId, writerId, ilchonpyungRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(ilchonpyungResponseDto);
+    }
+
+    @GetMapping("{ownerId}")
+    public ResponseEntity<List<IlchonpyungResponseDto>> getAllIlchonpyung (@PathVariable Long ownerId) {
+        List<IlchonpyungResponseDto> ilchonpyungResponseDtos = ilchonpyungService.getAllIlchonpyung(ownerId);
+        return ResponseEntity.ok(ilchonpyungResponseDtos);
     }
 
     @DeleteMapping("/{ownerId}/{ilchonpyungId}")
