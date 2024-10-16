@@ -4,6 +4,7 @@ import com.hyunjin.kworld.jwt.TokenProvider;
 import com.hyunjin.kworld.member.dto.LoginRequestDto;
 import com.hyunjin.kworld.member.dto.MemberResponseDto;
 import com.hyunjin.kworld.member.dto.SignupRequestDto;
+import com.hyunjin.kworld.member.entity.Gender;
 import com.hyunjin.kworld.member.entity.Member;
 import com.hyunjin.kworld.member.repository.MemberRepository;
 import com.hyunjin.kworld.member.repository.RefreshTokenRepository;
@@ -27,6 +28,9 @@ public class MemberService {
         String password = signupRequestDto.getPassword();
         String confirmPassword = signupRequestDto.getConfirmPassword();
         String name = signupRequestDto.getName();
+        Gender gender = signupRequestDto.getGender();
+        String studentNumber = signupRequestDto.getStudentNumber();
+        String major = signupRequestDto.getMajor();
 
         if(!password.equals(confirmPassword)){
             throw new IllegalArgumentException("비밀번호를 확인해주세요.");
@@ -36,7 +40,7 @@ public class MemberService {
             throw new IllegalArgumentException("이미 가입한 계정입니다.");
         }
 
-        Member member = new Member(email, passwordEncoder.encode(password), name);
+        Member member = new Member(email, passwordEncoder.encode(password), name, gender, studentNumber, major);
 
         memberRepository.save(member);
     }
