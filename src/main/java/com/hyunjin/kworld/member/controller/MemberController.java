@@ -1,17 +1,17 @@
 package com.hyunjin.kworld.member.controller;
 
+import com.hyunjin.kworld.global.MemberDetailsImpl;
 import com.hyunjin.kworld.jwt.TokenProvider;
 import com.hyunjin.kworld.member.dto.LoginRequestDto;
 import com.hyunjin.kworld.member.dto.MemberResponseDto;
 import com.hyunjin.kworld.member.dto.SignupRequestDto;
+import com.hyunjin.kworld.member.entity.Member;
 import com.hyunjin.kworld.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,5 +43,12 @@ public class MemberController {
         responseBody.put("message", "로그인에 성공하였습니다.");
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
+
+    @GetMapping("/mypage")
+    public ResponseEntity<MemberResponseDto> getMypage (@AuthenticationPrincipal MemberDetailsImpl MemberDetails){
+        Member member = MemberDetails.getMember();
+        MemberResponseDto memberResponseDto = memberService.getMypage(member);
+        return ResponseEntity.ok(memberResponseDto);
     }
 }

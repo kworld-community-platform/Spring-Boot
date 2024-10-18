@@ -59,4 +59,11 @@ public class MemberService {
                 member.getMajor()
         );
     }
+
+    @Transactional
+    public MemberResponseDto getMypage(Member member){
+        Member loginMember = memberRepository.findById(member.getId())
+                .orElseThrow(()->new IllegalArgumentException("로그인 후 이용해주세요."));
+        return new MemberResponseDto(loginMember);
+    }
 }
