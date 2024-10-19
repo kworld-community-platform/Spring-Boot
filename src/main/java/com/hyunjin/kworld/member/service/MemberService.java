@@ -1,13 +1,9 @@
 package com.hyunjin.kworld.member.service;
 
-import com.hyunjin.kworld.jwt.TokenProvider;
-import com.hyunjin.kworld.member.dto.LoginRequestDto;
-import com.hyunjin.kworld.member.dto.MemberResponseDto;
-import com.hyunjin.kworld.member.dto.SignupRequestDto;
+import com.hyunjin.kworld.member.dto.*;
 import com.hyunjin.kworld.member.entity.Gender;
 import com.hyunjin.kworld.member.entity.Member;
 import com.hyunjin.kworld.member.repository.MemberRepository;
-import com.hyunjin.kworld.member.repository.RefreshTokenRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,8 +15,6 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final TokenProvider tokenProvider;
 
     @Transactional
     public void signup (SignupRequestDto signupRequestDto){
