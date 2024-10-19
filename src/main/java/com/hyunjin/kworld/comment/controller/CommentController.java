@@ -22,4 +22,11 @@ public class CommentController {
         CommentResponseDto commentResponseDto = commentService.createComment(diaryId, commentRequestDto, member);
         return ResponseEntity.ok(commentResponseDto);
     }
+
+    @PutMapping("/{diaryId}/{commentId}")
+    public ResponseEntity<CommentResponseDto> updateComment (@PathVariable Long diaryId, @PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal MemberDetailsImpl MemberDetails){
+        Member member = MemberDetails.getMember();
+        CommentResponseDto commentResponseDto = commentService.updateComment(diaryId, commentId, commentRequestDto, member);
+        return ResponseEntity.ok(commentResponseDto);
+    }
 }

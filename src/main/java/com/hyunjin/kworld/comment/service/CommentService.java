@@ -26,4 +26,24 @@ public class CommentService {
         Comment savedComment = commentRepository.save(comment);
         return new CommentResponseDto(savedComment);
     }
+
+    @Transactional
+    public CommentResponseDto updateComment(Long diaryId, Long commentId, CommentRequestDto commentRequestDto, Member member){
+        Diary diary = diaryRepository.findByIdWithImagesOrdered(diaryId)
+                .orElseThrow(() -> new IllegalArgumentException("다이어리가 존재하지 않습니다."));
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()-> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+
+        if(!comment.getDiary().getId().equals(diaryId)){
+            throw new IllegalArgumentException("댓글이 존재하지 않습니다.");
+        }
+
+        if (!comment.getMember().getId().equals(member.getId())) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
+        comment.update(commentRequestDto.getComment());
+        return new CommentResponseDto(comment);
+    }
 }
