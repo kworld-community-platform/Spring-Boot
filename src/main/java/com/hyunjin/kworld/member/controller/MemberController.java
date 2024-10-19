@@ -50,11 +50,24 @@ public class MemberController {
         return ResponseEntity.ok(mypageResponseDto);
     }
 
+    @GetMapping("/intro")
+    public ResponseEntity<IntroResponseDto> getIntro (@AuthenticationPrincipal MemberDetailsImpl MemberDetails){
+        Member member = MemberDetails.getMember();
+        IntroResponseDto introResponseDto = memberService.getIntro(member);
+        return ResponseEntity.ok(introResponseDto);
+    }
+
     @PutMapping("/mypage")
     public ResponseEntity<MypageResponseDto> updateMyPage (@RequestBody MypageRequestDto mypageRequestDto, @AuthenticationPrincipal MemberDetailsImpl MemberDetails){
-        Member member =MemberDetails.getMember();
+        Member member = MemberDetails.getMember();
         MypageResponseDto mypageResponseDto = memberService.updateMyPage(mypageRequestDto, member);
         return ResponseEntity.ok(mypageResponseDto);
     }
 
+    @PutMapping("/intro")
+    public ResponseEntity<IntroResponseDto> updateIntro (@RequestBody IntroRequestDto introRequestDto, @AuthenticationPrincipal MemberDetailsImpl MemberDetails){
+        Member member = MemberDetails.getMember();
+        IntroResponseDto introResponseDto = memberService.updateIntro(introRequestDto, member);
+        return ResponseEntity.ok(introResponseDto);
+    }
 }

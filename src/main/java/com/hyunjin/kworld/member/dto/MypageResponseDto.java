@@ -15,6 +15,7 @@ public class MypageResponseDto {
     private Gender gender;
     private String studentNumber;
     private String major;
+    private String intro;
 
     public MypageResponseDto(Member member){
         this.name = member.getName();
@@ -22,5 +23,6 @@ public class MypageResponseDto {
         this.gender = member.getGender();
         this.studentNumber = member.getStudentNumber();
         this.major = member.getMajor();
+        this.intro = member.getIntro();
     }
 }

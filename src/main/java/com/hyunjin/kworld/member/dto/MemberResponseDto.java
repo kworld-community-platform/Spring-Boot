@@ -16,13 +16,4 @@ public class MemberResponseDto {
     private Gender gender;
     private String studentNumber;
     private String major;
-
-    public MemberResponseDto(Member member){
-        this.email = member.getEmail();
-        this.name = member.getName();
-        this.profileImage = this.getProfileImage();
-        this.gender = member.getGender();
-        this.studentNumber = member.getStudentNumber();
-        this.major = member.getMajor();
-    }
 }

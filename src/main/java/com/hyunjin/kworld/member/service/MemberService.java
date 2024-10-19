@@ -66,12 +66,25 @@ public class MemberService {
     }
 
     @Transactional
+    public IntroResponseDto getIntro(Member member){
+        Member loginMember = memberRepository.findById(member.getId())
+                .orElseThrow(()->new IllegalArgumentException("로그인 후 이용해주세요."));
+        return new IntroResponseDto(loginMember);
+    }
+
+    @Transactional
     public MypageResponseDto updateMyPage(MypageRequestDto mypageRequestDto, Member member){
         Member loginMember = memberRepository.findById(member.getId())
                 .orElseThrow(()->new IllegalArgumentException("로그인 후 이용해주세요."));
-
         loginMember.update(mypageRequestDto);
-
         return new MypageResponseDto(loginMember);
+    }
+
+    @Transactional
+    public IntroResponseDto updateIntro(IntroRequestDto introRequestDto, Member member){
+        Member loginMember = memberRepository.findById(member.getId())
+                .orElseThrow(()->new IllegalArgumentException("로그인 후 이용해주세요."));
+        loginMember.updateIntro(introRequestDto);
+        return new IntroResponseDto(loginMember);
     }
 }

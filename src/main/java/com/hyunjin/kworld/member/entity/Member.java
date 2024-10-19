@@ -1,6 +1,8 @@
 package com.hyunjin.kworld.member.entity;
 
+import com.hyunjin.kworld.member.dto.IntroRequestDto;
 import com.hyunjin.kworld.member.dto.MypageRequestDto;
+import com.hyunjin.kworld.member.dto.MypageResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -60,5 +62,9 @@ public class Member {
         if(mypageRequestDto.getMajor() != null){
             this.major = mypageRequestDto.getMajor();
         }
+    }
+
+    public void updateIntro(IntroRequestDto introRequestDto){
+        this.intro = introRequestDto.getIntro();
     }
 }
