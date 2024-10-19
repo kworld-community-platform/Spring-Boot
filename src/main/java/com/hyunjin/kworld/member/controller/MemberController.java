@@ -2,9 +2,7 @@ package com.hyunjin.kworld.member.controller;
 
 import com.hyunjin.kworld.global.MemberDetailsImpl;
 import com.hyunjin.kworld.jwt.TokenProvider;
-import com.hyunjin.kworld.member.dto.LoginRequestDto;
-import com.hyunjin.kworld.member.dto.MemberResponseDto;
-import com.hyunjin.kworld.member.dto.SignupRequestDto;
+import com.hyunjin.kworld.member.dto.*;
 import com.hyunjin.kworld.member.entity.Member;
 import com.hyunjin.kworld.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -46,9 +44,17 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
-    public ResponseEntity<MemberResponseDto> getMypage (@AuthenticationPrincipal MemberDetailsImpl MemberDetails){
+    public ResponseEntity<MypageResponseDto> getMyPage (@AuthenticationPrincipal MemberDetailsImpl MemberDetails){
         Member member = MemberDetails.getMember();
-        MemberResponseDto memberResponseDto = memberService.getMypage(member);
-        return ResponseEntity.ok(memberResponseDto);
+        MypageResponseDto mypageResponseDto = memberService.getMyPage(member);
+        return ResponseEntity.ok(mypageResponseDto);
     }
+
+    @PutMapping("/mypage")
+    public ResponseEntity<MypageResponseDto> updateMyPage (@RequestBody MypageRequestDto mypageRequestDto, @AuthenticationPrincipal MemberDetailsImpl MemberDetails){
+        Member member =MemberDetails.getMember();
+        MypageResponseDto mypageResponseDto = memberService.updateMyPage(mypageRequestDto, member);
+        return ResponseEntity.ok(mypageResponseDto);
+    }
+
 }

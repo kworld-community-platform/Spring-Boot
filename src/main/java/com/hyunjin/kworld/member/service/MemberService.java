@@ -1,9 +1,7 @@
 package com.hyunjin.kworld.member.service;
 
 import com.hyunjin.kworld.jwt.TokenProvider;
-import com.hyunjin.kworld.member.dto.LoginRequestDto;
-import com.hyunjin.kworld.member.dto.MemberResponseDto;
-import com.hyunjin.kworld.member.dto.SignupRequestDto;
+import com.hyunjin.kworld.member.dto.*;
 import com.hyunjin.kworld.member.entity.Member;
 import com.hyunjin.kworld.member.repository.MemberRepository;
 import com.hyunjin.kworld.member.repository.RefreshTokenRepository;
@@ -61,9 +59,19 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberResponseDto getMypage(Member member){
+    public MypageResponseDto getMyPage(Member member){
         Member loginMember = memberRepository.findById(member.getId())
                 .orElseThrow(()->new IllegalArgumentException("로그인 후 이용해주세요."));
-        return new MemberResponseDto(loginMember);
+        return new MypageResponseDto(loginMember);
+    }
+
+    @Transactional
+    public MypageResponseDto updateMyPage(MypageRequestDto mypageRequestDto, Member member){
+        Member loginMember = memberRepository.findById(member.getId())
+                .orElseThrow(()->new IllegalArgumentException("로그인 후 이용해주세요."));
+
+        loginMember.update(mypageRequestDto);
+
+        return new MypageResponseDto(loginMember);
     }
 }
