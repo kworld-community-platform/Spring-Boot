@@ -9,11 +9,20 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberResponseDto {
-    private String email;
+public class MypageResponseDto {
     private String name;
     private String profileImage;
     private Gender gender;
     private String studentNumber;
     private String major;
+    private String intro;
+
+    public MypageResponseDto(Member member){
+        this.name = member.getName();
+        this.profileImage = member.getProfileImage();
+        this.gender = member.getGender();
+        this.studentNumber = member.getStudentNumber();
+        this.major = member.getMajor();
+        this.intro = member.getIntro();
+    }
 }

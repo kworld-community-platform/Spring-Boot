@@ -1,5 +1,8 @@
 package com.hyunjin.kworld.member.entity;
 
+import com.hyunjin.kworld.member.dto.IntroRequestDto;
+import com.hyunjin.kworld.member.dto.MypageRequestDto;
+import com.hyunjin.kworld.member.dto.MypageResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +39,8 @@ public class Member {
     @Column(nullable = false)
     private String major;
 
+    private String intro;
+
     private Boolean isDeleted = false;
 
     public Member(String email, String password, String name, Gender gender, String studentNumber, String major) {
@@ -45,5 +50,27 @@ public class Member {
         this.gender = gender;
         this.studentNumber = studentNumber;
         this.major = major;
+    }
+
+    public void update(MypageRequestDto mypageRequestDto){
+        if(mypageRequestDto.getName() != null){
+            this.name = mypageRequestDto.getName();
+        }
+        if(mypageRequestDto.getProfileImage() != null){
+            this.profileImage = mypageRequestDto.getProfileImage();
+        }
+        if(mypageRequestDto.getGender() != null){
+            this.gender = mypageRequestDto.getGender();
+        }
+        if(mypageRequestDto.getStudentNumber() != null){
+            this.studentNumber = mypageRequestDto.getStudentNumber();
+        }
+        if(mypageRequestDto.getMajor() != null){
+            this.major = mypageRequestDto.getMajor();
+        }
+    }
+
+    public void updateIntro(IntroRequestDto introRequestDto){
+        this.intro = introRequestDto.getIntro();
     }
 }
