@@ -1,6 +1,7 @@
 package com.hyunjin.kworld.diary.service;
 
 import com.hyunjin.kworld.comment.dto.CommentResponseDto;
+import com.hyunjin.kworld.comment.repository.CommentRepository;
 import com.hyunjin.kworld.diary.dto.DiaryRequestDto;
 import com.hyunjin.kworld.diary.dto.DiaryResponseDto;
 import com.hyunjin.kworld.diary.dto.DiaryUpdateRequestDto;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final S3Uploader s3Uploader;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public DiaryResponseDto createDiary(List<MultipartFile> images, DiaryRequestDto diaryRequestDto, Member member) {
@@ -60,7 +62,24 @@ public class DiaryService {
     public List<DiaryResponseDto> getAllDiary(Long memberId) {
         List<Diary> diaries = diaryRepository.findAllByMemberIdWithImagesOrdered(memberId);
         return diaries.stream()
-                .map(DiaryResponseDto::new)
+                .map(diary -> {
+                    List<ImageDto> sortedImages = diary.getImages().stream()
+                            .sorted(Comparator.comparingInt(DiaryImage::getOrder))
+                            .map(img -> new ImageDto(img.getId(), img.getImageUrl()))
+                            .collect(Collectors.toList());
+
+                    List<CommentResponseDto> comments = commentRepository.findByDiaryIdOrderByCreatedAtDesc(diary.getId()).stream()
+                            .map(CommentResponseDto::new)
+                            .collect(Collectors.toList());
+
+                    return new DiaryResponseDto(
+                            diary.getId(),
+                            diary.getTitle(),
+                            diary.getContent(),
+                            sortedImages,
+                            comments
+                    );
+                })
                 .collect(Collectors.toList());
     }
 
@@ -78,7 +97,7 @@ public class DiaryService {
                 .map(img -> new ImageDto(img.getId(), img.getImageUrl()))
                 .collect(Collectors.toList());
 
-        List<CommentResponseDto> comments = diary.getComments().stream()
+        List<CommentResponseDto> comments = commentRepository.findByDiaryIdOrderByCreatedAtDesc(diaryId).stream()
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
 
