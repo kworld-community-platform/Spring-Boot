@@ -1,5 +1,6 @@
 package com.hyunjin.kworld.diary.entity;
 
+import com.hyunjin.kworld.comment.entity.Comment;
 import com.hyunjin.kworld.global.BaseEntity;
 import com.hyunjin.kworld.member.entity.Member;
 import jakarta.persistence.*;
@@ -30,6 +31,9 @@ public class Diary extends BaseEntity {
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DiaryImage> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -39,6 +43,7 @@ public class Diary extends BaseEntity {
         this.content = content;
         this.member = member;
         this.images =new ArrayList<>();
+        this.comments = new ArrayList<>();
     }
 
     public void addImage(DiaryImage image) {
