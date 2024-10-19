@@ -2,6 +2,7 @@ package com.hyunjin.kworld.comment.entity;
 
 import com.hyunjin.kworld.diary.entity.Diary;
 import com.hyunjin.kworld.global.BaseEntity;
+import com.hyunjin.kworld.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,4 +24,14 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id", nullable = false)
     private Diary diary;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    public Comment(String comment, Diary diary, Member member){
+        this.comment = comment;
+        this.diary = diary;
+        this.member = member;
+    }
 }
