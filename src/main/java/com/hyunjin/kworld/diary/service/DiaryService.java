@@ -1,5 +1,6 @@
 package com.hyunjin.kworld.diary.service;
 
+import com.hyunjin.kworld.comment.dto.CommentResponseDto;
 import com.hyunjin.kworld.diary.dto.DiaryRequestDto;
 import com.hyunjin.kworld.diary.dto.DiaryResponseDto;
 import com.hyunjin.kworld.diary.dto.DiaryUpdateRequestDto;
@@ -77,7 +78,11 @@ public class DiaryService {
                 .map(img -> new ImageDto(img.getId(), img.getImageUrl()))
                 .collect(Collectors.toList());
 
-        return new DiaryResponseDto(diary.getId(), diary.getTitle(), diary.getContent(), sortedImages);
+        List<CommentResponseDto> comments = diary.getComments().stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
+
+        return new DiaryResponseDto(diary.getId(), diary.getTitle(), diary.getContent(), sortedImages, comments);
     }
 
     @Transactional
@@ -149,7 +154,11 @@ public class DiaryService {
                 .map(img -> new ImageDto(img.getId(), img.getImageUrl()))
                 .collect(Collectors.toList());
 
-        return new DiaryResponseDto(diary.getId(), diary.getTitle(), diary.getContent(), updatedImageDtos);
+        List<CommentResponseDto> comments = diary.getComments().stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
+
+        return new DiaryResponseDto(diary.getId(), diary.getTitle(), diary.getContent(), updatedImageDtos, comments);
     }
 
     @Transactional
