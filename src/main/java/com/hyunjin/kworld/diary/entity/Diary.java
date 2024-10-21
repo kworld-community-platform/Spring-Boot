@@ -29,6 +29,9 @@ public class Diary extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private int likeCount = 0;
+
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DiaryImage> images = new ArrayList<>();
 
@@ -75,7 +78,11 @@ public class Diary extends BaseEntity {
         }
     }
 
-    public int getLikeCount() {
-        return likes.size();
+    public void addLike(){
+        this.likeCount++;
+    }
+
+    public void removeLike(){
+        this.likeCount--;
     }
 }
