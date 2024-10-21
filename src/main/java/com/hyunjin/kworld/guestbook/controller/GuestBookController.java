@@ -59,4 +59,12 @@ public class GuestBookController {
         GuestBookResponseDto guestBookResponseDto = guestBookService.updateGuestBook(guestbookId, title, content, image, writer);
         return ResponseEntity.ok(guestBookResponseDto);
     }
+
+    @DeleteMapping("/{guestbookId}")
+    public ResponseEntity<String> deleteGuestbook(@PathVariable Long guestbookId,
+                                                  @AuthenticationPrincipal MemberDetailsImpl MemberDetails){
+        Member writer = MemberDetails.getMember();
+        guestBookService.deleteGuestBook(guestbookId, writer);
+        return ResponseEntity.ok("방명록이 삭제되었습니다.");
+    }
 }

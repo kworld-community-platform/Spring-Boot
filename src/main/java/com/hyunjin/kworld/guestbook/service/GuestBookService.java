@@ -85,4 +85,24 @@ public class GuestBookService {
         guestBookRepository.save(guestBook);
         return new GuestBookResponseDto(guestBook);
     }
+
+    @Transactional
+    public void deleteGuestBook(Long guestbookId, Member writer) {
+        GuestBook guestBook = guestBookRepository.findById(guestbookId)
+                .orElseThrow(() -> new IllegalArgumentException("방명록이 존재하지 않습니다."));
+
+        if (!guestBook.getWriter().getId().equals(writer.getId()) && !guestBook.getOwner().getId().equals(writer.getId())) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
+        try {
+            if (guestBook.getGuestBookImage() != null) {
+                s3Uploader.deleteFile(guestBook.getGuestBookImage());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("이미지 삭제 중 오류가 발생했습니다.", e);
+        }
+
+        guestBookRepository.delete(guestBook);
+    }
 }
