@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,5 +45,15 @@ public class GuestBookService {
 
         Page<GuestBook> guestBooks = guestBookRepository.findAll(sortedPageable);
         return guestBooks.map(GuestBookResponseDto::new);
+    }
+
+    @Transactional
+    public GuestBookResponseDto getOneGuestBook(Long guestbookId, Member member){
+        GuestBook guestBook = guestBookRepository.findById(guestbookId)
+                .orElseThrow(() -> new IllegalArgumentException("방명록이 존재하지 않습니다."));
+        if (!guestBook.getMember().getId().equals(member.getId())) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+        return new GuestBookResponseDto(guestBook);
     }
 }

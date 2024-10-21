@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,5 +37,12 @@ public class GuestBookController {
         Pageable pageable = PageRequest.of(page, size);
         Page<GuestBookResponseDto> guestBookResponseDtos = guestBookService.getAllGuestBook(pageable);
         return ResponseEntity.ok(guestBookResponseDtos);
+    }
+
+    @GetMapping("{guestbookId}")
+    public ResponseEntity<GuestBookResponseDto> getOneGuestBook (@PathVariable Long guestbookId, @AuthenticationPrincipal MemberDetailsImpl MemberDetails){
+        Member member = MemberDetails.getMember();
+        GuestBookResponseDto guestbookResponseDto = guestBookService.getOneGuestBook(guestbookId, member);
+        return ResponseEntity.ok(guestbookResponseDto);
     }
 }
