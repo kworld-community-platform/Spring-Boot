@@ -16,6 +16,7 @@ public class DiaryResponseDto {
     private Long diaryId;
     private String title;
     private String content;
+    private int likeCount;
     private List<ImageDto> images;
     private List<CommentResponseDto> comments;
 
@@ -31,10 +32,11 @@ public class DiaryResponseDto {
                 .collect(Collectors.toList());
     }
 
-    public DiaryResponseDto(Long diaryId, String title, String content, List<ImageDto> images){
+    public DiaryResponseDto(Long diaryId, String title, String content, int likeCount, List<ImageDto> images){
         this.diaryId = diaryId;
         this.title = title;
         this.content = content;
+        this.likeCount = likeCount;
         this.images = images;
         this.comments = new ArrayList<>();
     }

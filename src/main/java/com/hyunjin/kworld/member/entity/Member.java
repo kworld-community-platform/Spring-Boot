@@ -47,7 +47,7 @@ public class Member {
 
     private Boolean isDeleted = false;
 
-    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DiaryLike> likes = new ArrayList<>();
 
     public Member(String email, String password, String name, Gender gender, String studentNumber, String major) {

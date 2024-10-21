@@ -25,8 +25,8 @@ public class DiaryLike {
     @JoinColumn(name = "diary_id", nullable = false)
     private Diary diary;
 
-    public DiaryLike (Member member, Diary diary) {
-        this.member = member;
+    public DiaryLike (Diary diary,Member member) {
         this.diary = diary;
+        this.member = member;
     }
 }

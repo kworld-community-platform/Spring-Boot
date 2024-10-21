@@ -55,7 +55,7 @@ public class DiaryService {
                 throw new RuntimeException("S3 파일 업로드 중 오류가 발생했습니다.", e);
             }
         }
-        return new DiaryResponseDto(diary.getId(), diary.getTitle(), diary.getContent(), imageDtos);
+        return new DiaryResponseDto(diary.getId(), diary.getTitle(), diary.getContent(), diary.getLikeCount(), imageDtos);
     }
 
     @Transactional(readOnly = true)
@@ -76,6 +76,7 @@ public class DiaryService {
                             diary.getId(),
                             diary.getTitle(),
                             diary.getContent(),
+                            diary.getLikeCount(),
                             sortedImages,
                             comments
                     );
@@ -101,7 +102,7 @@ public class DiaryService {
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
 
-        return new DiaryResponseDto(diary.getId(), diary.getTitle(), diary.getContent(), sortedImages, comments);
+        return new DiaryResponseDto(diary.getId(), diary.getTitle(), diary.getContent(), diary.getLikeCount(), sortedImages, comments);
     }
 
     @Transactional
@@ -177,7 +178,7 @@ public class DiaryService {
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
 
-        return new DiaryResponseDto(diary.getId(), diary.getTitle(), diary.getContent(), updatedImageDtos, comments);
+        return new DiaryResponseDto(diary.getId(), diary.getTitle(), diary.getContent(), diary.getLikeCount(), updatedImageDtos, comments);
     }
 
     @Transactional
