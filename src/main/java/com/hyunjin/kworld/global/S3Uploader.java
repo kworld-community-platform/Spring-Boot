@@ -31,6 +31,7 @@ public class S3Uploader {
     /**
      * 여러 파일을 업로드하고 각각의 파일 URL을 반환
      */
+
     public List<String> uploadFiles(List<MultipartFile> multipartFiles) throws IOException {
         List<String> fileUrls = new ArrayList<>();
 
@@ -46,8 +47,20 @@ public class S3Uploader {
     }
 
     /**
+     *  단일 이미지를 업로드
+     */
+
+    public String uploadFile(MultipartFile multipartFile) throws IOException {
+        if(multipartFile == null || multipartFile.isEmpty()){
+            throw new IllegalArgumentException("업로드할 파일이 없습니다.");
+        }
+        return uploadSingleFile(multipartFile);
+    }
+
+    /**
      * 개별 파일을 S3에 업로드
      */
+
     private String uploadSingleFile(MultipartFile multipartFile) throws IOException {
         String originalFileName = multipartFile.getOriginalFilename();
         String uuid = UUID.randomUUID().toString();
@@ -76,6 +89,7 @@ public class S3Uploader {
     /**
      * S3 버킷 내의 파일 URL을 생성
      */
+
     private String generateFileUrl(String fileName) {
         return String.format("https://%s.s3.%s.amazonaws.com/%s", bucket, region, fileName);
     }
@@ -83,6 +97,7 @@ public class S3Uploader {
     /**
      * S3에서 파일을 삭제
      */
+
     public boolean deleteFile(String fileUrl) throws IOException {
         try {
             String key = extractKeyFromUrl(fileUrl);
@@ -109,6 +124,7 @@ public class S3Uploader {
     /**
      * S3 URL에서 파일 경로만 추출
      */
+
     private String extractKeyFromUrl(String fileUrl) {
         int startIndex = fileUrl.indexOf(baseDir);
         if (startIndex == -1) {
