@@ -6,11 +6,16 @@ import com.hyunjin.kworld.guestbook.entity.GuestBook;
 import com.hyunjin.kworld.guestbook.repository.GuestBookRepository;
 import com.hyunjin.kworld.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +34,17 @@ public class GuestBookService {
         GuestBook guestBook = new GuestBook(title,content,guestBookImage, member);
         guestBookRepository.save(guestBook);
         return new GuestBookResponseDto(guestBook);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<GuestBookResponseDto> getAllGuestBook (Pageable pageable){
+        Pageable sortedPageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+
+        Page<GuestBook> guestBooks = guestBookRepository.findAll(sortedPageable);
+        return guestBooks.map(GuestBookResponseDto::new);
     }
 }
