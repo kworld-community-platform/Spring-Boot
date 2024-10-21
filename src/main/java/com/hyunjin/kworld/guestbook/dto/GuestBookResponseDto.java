@@ -13,11 +13,13 @@ public class GuestBookResponseDto {
     private String title;
     private String content;
     private String guestBookImage;
+    private String writer;
 
     public GuestBookResponseDto(GuestBook guestBook){
         this.guestBookId = guestBook.getId();
         this.title = guestBook.getTitle();
         this.content = guestBook.getContent();
         this.guestBookImage = guestBook.getGuestBookImage();
+        this.writer = guestBook.getWriter().getName();
     }
 }

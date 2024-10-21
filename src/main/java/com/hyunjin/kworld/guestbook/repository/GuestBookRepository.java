@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface GuestBookRepository extends JpaRepository<GuestBook, Long> {
-    Page<GuestBook>findAll(Pageable pageable);
+    Page<GuestBook> findByOwnerId(Long ownerId, Pageable pageable);
 }

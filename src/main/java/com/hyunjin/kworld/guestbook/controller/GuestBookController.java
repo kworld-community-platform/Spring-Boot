@@ -21,7 +21,7 @@ import java.io.IOException;
 public class GuestBookController {
     private final GuestBookService guestBookService;
 
-    @PostMapping("/{ownerId}")
+    @PostMapping("/mini/{ownerId}")
     public ResponseEntity<GuestBookResponseDto> createGuestBook(@PathVariable Long ownerId,
                                                                 @RequestParam String title,
                                                                 @RequestParam String content,
@@ -32,29 +32,31 @@ public class GuestBookController {
         return ResponseEntity.ok(guestBookResponseDto);
     }
 
-    @GetMapping
-    public ResponseEntity<Page<GuestBookResponseDto>> getAllGuestBook(@RequestParam(defaultValue = "0") int page,
+    @GetMapping("/mini/{ownerId}")
+    public ResponseEntity<Page<GuestBookResponseDto>> getAllGuestBook(@PathVariable Long ownerId,
+                                                                      @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<GuestBookResponseDto> guestBookResponseDtos = guestBookService.getAllGuestBook(pageable);
+        Page<GuestBookResponseDto> guestBookResponseDtos = guestBookService.getAllGuestBook(ownerId,pageable);
         return ResponseEntity.ok(guestBookResponseDtos);
     }
 
-    @GetMapping("{guestbookId}")
-    public ResponseEntity<GuestBookResponseDto> getOneGuestBook(@PathVariable Long guestbookId, @AuthenticationPrincipal MemberDetailsImpl MemberDetails) {
-        Member member = MemberDetails.getMember();
-        GuestBookResponseDto guestbookResponseDto = guestBookService.getOneGuestBook(guestbookId, member);
+    @GetMapping("/{guestbookId}")
+    public ResponseEntity<GuestBookResponseDto> getOneGuestBook(@PathVariable Long guestbookId,
+                                                                @AuthenticationPrincipal MemberDetailsImpl MemberDetails) {
+        Member writer = MemberDetails.getMember();
+        GuestBookResponseDto guestbookResponseDto = guestBookService.getOneGuestBook(guestbookId, writer);
         return ResponseEntity.ok(guestbookResponseDto);
     }
 
-    @PutMapping("{guestbookId}")
+    @PutMapping("/{guestbookId}")
     public ResponseEntity<GuestBookResponseDto> updateGuestBook(@PathVariable Long guestbookId,
                                                                 @RequestParam(required = false) String title,
                                                                 @RequestParam(required = false) String content,
                                                                 @RequestPart(name = "image", required = false) MultipartFile image,
                                                                 @AuthenticationPrincipal MemberDetailsImpl MemberDetails) throws IOException {
-        Member member = MemberDetails.getMember();
-        GuestBookResponseDto guestBookResponseDto = guestBookService.updateGuestBook(guestbookId, title, content, image, member);
+        Member writer = MemberDetails.getMember();
+        GuestBookResponseDto guestBookResponseDto = guestBookService.updateGuestBook(guestbookId, title, content, image, writer);
         return ResponseEntity.ok(guestBookResponseDto);
     }
 }

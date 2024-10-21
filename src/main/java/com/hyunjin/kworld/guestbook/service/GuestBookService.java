@@ -41,14 +41,14 @@ public class GuestBookService {
     }
 
     @Transactional(readOnly = true)
-    public Page<GuestBookResponseDto> getAllGuestBook (Pageable pageable){
+    public Page<GuestBookResponseDto> getAllGuestBook (Long ownerId, Pageable pageable){
         Pageable sortedPageable = PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
                 Sort.by(Sort.Direction.DESC, "createdAt")
         );
 
-        Page<GuestBook> guestBooks = guestBookRepository.findAll(sortedPageable);
+        Page<GuestBook> guestBooks = guestBookRepository.findByOwnerId(ownerId,sortedPageable);
         return guestBooks.map(GuestBookResponseDto::new);
     }
 
@@ -56,18 +56,19 @@ public class GuestBookService {
     public GuestBookResponseDto getOneGuestBook(Long guestbookId, Member member){
         GuestBook guestBook = guestBookRepository.findById(guestbookId)
                 .orElseThrow(() -> new IllegalArgumentException("방명록이 존재하지 않습니다."));
-        if (!guestBook.getMember().getId().equals(member.getId())) {
+
+        if (!guestBook.getWriter().getId().equals(member.getId())) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
         return new GuestBookResponseDto(guestBook);
     }
 
     @Transactional
-    public GuestBookResponseDto updateGuestBook(Long id, String title, String content, MultipartFile image, Member member) throws IOException {
-        GuestBook guestBook = guestBookRepository.findById(id)
+    public GuestBookResponseDto updateGuestBook(Long guestbookId, String title, String content, MultipartFile image, Member writer) throws IOException {
+        GuestBook guestBook = guestBookRepository.findById(guestbookId)
                 .orElseThrow(() -> new IllegalArgumentException("방명록이 존재하지 않습니다."));
 
-        if (!guestBook.getMember().equals(member)) {
+        if (!guestBook.getWriter().getId().equals(writer.getId())) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
 
