@@ -5,7 +5,6 @@ import com.hyunjin.kworld.diary.dto.DiaryResponseDto;
 import com.hyunjin.kworld.diary.dto.DiaryUpdateRequestDto;
 import com.hyunjin.kworld.diary.service.DiaryService;
 import com.hyunjin.kworld.global.MemberDetailsImpl;
-import com.hyunjin.kworld.global.MemberDetailsServiceImpl;
 import com.hyunjin.kworld.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import java.util.List;
 @RequestMapping
 public class DiaryController {
     private final DiaryService diaryService;
-    private final MemberDetailsServiceImpl memberDetailsServiceImpl;
 
     @PostMapping("/diaries")
     public ResponseEntity<DiaryResponseDto> createDiary (@RequestPart(value = "images", required = false) List<MultipartFile> images,

@@ -1,5 +1,6 @@
 package com.hyunjin.kworld.member.entity;
 
+import com.hyunjin.kworld.diarylike.entity.DiaryLike;
 import com.hyunjin.kworld.member.dto.IntroRequestDto;
 import com.hyunjin.kworld.member.dto.MypageRequestDto;
 import com.hyunjin.kworld.member.dto.MypageResponseDto;
@@ -7,6 +8,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -43,6 +47,9 @@ public class Member {
 
     private Boolean isDeleted = false;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DiaryLike> likes = new ArrayList<>();
+
     public Member(String email, String password, String name, Gender gender, String studentNumber, String major) {
         this.email = email;
         this.password = password;
@@ -72,5 +79,9 @@ public class Member {
 
     public void updateIntro(IntroRequestDto introRequestDto){
         this.intro = introRequestDto.getIntro();
+    }
+
+    public int getLikeCount() {
+        return likes.size();
     }
 }

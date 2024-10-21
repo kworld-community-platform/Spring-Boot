@@ -1,6 +1,7 @@
 package com.hyunjin.kworld.diary.entity;
 
 import com.hyunjin.kworld.comment.entity.Comment;
+import com.hyunjin.kworld.diarylike.entity.DiaryLike;
 import com.hyunjin.kworld.global.BaseEntity;
 import com.hyunjin.kworld.member.entity.Member;
 import jakarta.persistence.*;
@@ -28,11 +29,17 @@ public class Diary extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private int likeCount = 0;
+
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DiaryImage> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DiaryLike> likes = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -69,5 +76,13 @@ public class Diary extends BaseEntity {
         for (int i = 0; i < images.size(); i++) {
             images.get(i).updateOrder(i); // 순서를 i로 설정
         }
+    }
+
+    public void addLike(){
+        this.likeCount++;
+    }
+
+    public void removeLike(){
+        this.likeCount--;
     }
 }
