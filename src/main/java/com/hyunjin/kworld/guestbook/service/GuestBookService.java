@@ -5,6 +5,7 @@ import com.hyunjin.kworld.guestbook.dto.GuestBookResponseDto;
 import com.hyunjin.kworld.guestbook.entity.GuestBook;
 import com.hyunjin.kworld.guestbook.repository.GuestBookRepository;
 import com.hyunjin.kworld.member.entity.Member;
+import com.hyunjin.kworld.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,17 +21,21 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class GuestBookService {
     private final GuestBookRepository guestBookRepository;
+    private final MemberRepository memberRepository;
     private final S3Uploader s3Uploader;
 
     @Transactional
-    public GuestBookResponseDto createGuestBook(String title, String content, MultipartFile image, Member member)throws IOException {
+    public GuestBookResponseDto createGuestBook(Long ownerId, String title, String content, MultipartFile image, Member writer)throws IOException {
+        Member owner = memberRepository.findById(ownerId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
         String guestBookImage = null;
 
         if(image != null && !image.isEmpty()){
             guestBookImage = s3Uploader.uploadFile(image);
         }
 
-        GuestBook guestBook = new GuestBook(title,content,guestBookImage, member);
+        GuestBook guestBook = new GuestBook(title,content,guestBookImage, owner, writer);
         guestBookRepository.save(guestBook);
         return new GuestBookResponseDto(guestBook);
     }
@@ -54,6 +59,29 @@ public class GuestBookService {
         if (!guestBook.getMember().getId().equals(member.getId())) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
+        return new GuestBookResponseDto(guestBook);
+    }
+
+    @Transactional
+    public GuestBookResponseDto updateGuestBook(Long id, String title, String content, MultipartFile image, Member member) throws IOException {
+        GuestBook guestBook = guestBookRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("방명록이 존재하지 않습니다."));
+
+        if (!guestBook.getMember().equals(member)) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
+        String guestBookImage = guestBook.getGuestBookImage();
+
+        if (image != null && !image.isEmpty()) {
+            if (guestBookImage != null) {
+                s3Uploader.deleteFile(guestBookImage);
+            }
+            guestBookImage = s3Uploader.uploadFile(image);
+        }
+
+        guestBook.update(title, content, guestBookImage);
+        guestBookRepository.save(guestBook);
         return new GuestBookResponseDto(guestBook);
     }
 }

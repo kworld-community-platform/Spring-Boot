@@ -26,13 +26,31 @@ public class GuestBook extends BaseEntity {
     private String guestBookImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @JoinColumn(name = "owner_id", nullable = false)
+    private Member owner;
 
-    public GuestBook(String title, String content, String guestBookImage, Member member) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "writer_id", nullable = false)
+    private Member writer;
+
+    public GuestBook(String title, String content, String guestBookImage, Member owner, Member writer) {
         this.title = title;
         this.content = content;
         this.guestBookImage = guestBookImage;
-        this.member = member;
+        this.owner = owner;
+        this.writer = writer;
+    }
+
+    public GuestBook update(String title, String content, String guestBookImage) {
+        if (title != null) {
+            this.title = title;
+        }
+        if (content != null) {
+            this.content = content;
+        }
+        if (guestBookImage != null) {
+            this.guestBookImage = guestBookImage;
+        }
+        return this;
     }
 }
