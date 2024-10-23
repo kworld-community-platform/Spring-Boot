@@ -1,6 +1,7 @@
 package com.hyunjin.kworld.member.entity;
 
 import com.hyunjin.kworld.diarylike.entity.DiaryLike;
+import com.hyunjin.kworld.ilchonpyung.entity.Ilchonpyung;
 import com.hyunjin.kworld.member.dto.IntroRequestDto;
 import com.hyunjin.kworld.member.dto.MypageRequestDto;
 import com.hyunjin.kworld.member.dto.MypageResponseDto;
@@ -49,6 +50,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DiaryLike> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ilchonpyung> ilchonpyungs = new ArrayList<>();
 
     public Member(String email, String password, String name, Gender gender, String studentNumber, String major) {
         this.email = email;

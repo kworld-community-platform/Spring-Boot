@@ -16,6 +16,11 @@ import java.util.stream.Collectors;
 public class IlchonService {
     private final IlchonRepository ilchonRepository;
 
+    public boolean isIlchon(Member owner, Member currentMember) {
+        return ilchonRepository.existsByMember1AndMember2(owner, currentMember) ||
+                ilchonRepository.existsByMember1AndMember2(currentMember, owner);
+    }
+
     @Transactional(readOnly = true)
     public List<IlchonResponseDto> getAllIlchon(Long currentMemberId){
         List<Ilchon> ilchonList = ilchonRepository.findByMember1IdOrMember2Id(currentMemberId, currentMemberId);
