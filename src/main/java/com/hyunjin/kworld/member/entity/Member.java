@@ -26,6 +26,8 @@ public class Member {
 
     private String profileImage;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private String studentNumber;
