@@ -49,6 +49,7 @@ public class MemberService {
         }
 
         return new MemberResponseDto(
+                member.getId(),
                 member.getEmail(),
                 member.getName(),
                 member.getProfileImage(),

@@ -81,6 +81,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         Member member = memberRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
         MemberResponseDto memberResponseDto = new MemberResponseDto(
+                member.getId(),
                 member.getEmail(),
                 member.getName(),
                 member.getProfileImage(),
